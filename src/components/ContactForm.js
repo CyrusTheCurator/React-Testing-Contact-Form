@@ -65,7 +65,7 @@ const ContactForm = () => {
         </div>
         {data && (
           <pre
-            data-testid="JSON data element"
+            data-testid="submitData"
             style={{ textAlign: "left", color: "white" }}
           >
             {JSON.stringify(data, null, 2)}

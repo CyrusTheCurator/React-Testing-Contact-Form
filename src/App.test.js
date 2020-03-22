@@ -1,6 +1,8 @@
 import React from "react";
-import { render, fireEvent, wait } from "@testing-library/react";
+import { render, fireEvent, waitForElement } from "@testing-library/react";
 import App from "./App";
+import { testData } from "./components/ContactForm";
+import { act } from "react-dom/test-utils";
 
 test("renders App without crashing", () => {
   render(<App />);
@@ -25,7 +27,7 @@ test("Checks that all input fields are present, properly labeled, and that no du
 //   render(<App />);
 // });
 
-test("tests submit functionality", () => {
+test("tests submit functionality", async () => {
   const container = render(<App />);
 
   const firstNameField = container.getByTestId("firstName");
@@ -33,26 +35,39 @@ test("tests submit functionality", () => {
   const emailField = container.getByTestId("email");
   const messageField = container.getByTestId("message");
 
-  fireEvent.keyDown(firstNameField, { key: "A", code: 65, charCode: 65 });
-  fireEvent.keyDown(lastNameField, { key: "A", code: 65, charCode: 65 });
-  fireEvent.keyDown(emailField, { key: "A", code: 65, charCode: 65 });
-  fireEvent.keyDown(messageField, { key: "A", code: 65, charCode: 65 });
-
   const submitButton = container.getByTestId("submit");
 
-  fireEvent.click(submitButton);
+  act(() => {
+    fireEvent.focus(firstNameField);
+    //fireEvent.keyPress(firstNameField, { key: "A", code: 65, charCode: 65 });
+    fireEvent.change(firstNameField, { target: { value: "TST" } });
 
-  test("tests some THINGS", async () => {
-    const JSONdata = await wait(
-      () => container.getByTestId("JSON data element"),
-      { container }
-    );
+    fireEvent.blur(firstNameField);
 
-    expect(JSONdata.innerHTML).tobe({
-      firstName: "A",
-      lastName: "A",
-      email: "A",
-      message: "A"
-    });
+    fireEvent.focus(lastNameField);
+    //fireEvent.keyPress(lastNameField, { key: "A", code: 65, charCode: 65 });
+    fireEvent.change(lastNameField, { target: { value: "HELLO!" } });
+
+    fireEvent.blur(lastNameField);
+
+    fireEvent.focus(emailField);
+    //fireEvent.keyPress(emailField, { key: "A", code: 65, charCode: 65 });
+    fireEvent.change(emailField, { target: { value: "HELLO!" } });
+
+    fireEvent.blur(emailField);
+
+    fireEvent.focus(messageField);
+    //fireEvent.keyPress(messageField, { key: "A", code: 65, charCode: 65 });
+    fireEvent.change(messageField, { target: { value: "HELLO!" } });
+
+    fireEvent.blur(messageField);
+    console.log(messageField);
+    fireEvent.focus(submitButton);
+    fireEvent.submit(submitButton);
   });
+  // const submitData = await waitForElement(() => {
+  //   container.getByTestId("submitData");
+  // });
+
+  // expect(submitData).toHaveTextContent(/firstname: A/i);
 });
